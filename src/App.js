@@ -1,11 +1,30 @@
+import { useState } from "react";
+
 export default function App() {
+  const [showForm, setShowForm] = useState(false);
+  const [items, setItems] = useState([]);
+
+  function handleShowForm() {
+    setShowForm((show) => !show);
+  }
+
+  function handleSetItems(item) {
+    console.log(items);
+    setItems((items) => [...items, item]);
+  }
+
   return (
     <div>
       <Header />
       <div className="app">
-        <Form />
-        <List />
-        <CheckedList />
+        <div className="form">
+          <Button onClick={handleShowForm}>
+            {showForm ? "Close" : "Add list item"}
+          </Button>
+          {showForm && <FormAddItem onAddItems={handleSetItems} />}
+        </div>
+        <List items={items} />
+        <CheckedList items={items} />
       </div>
     </div>
   );
@@ -15,34 +34,47 @@ function Header() {
   return <h1>My List</h1>;
 }
 
-function Form() {
+function FormAddItem({ onAddItems }) {
+  const [description, setDescription] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const newItem = { description, checked: false, id: Date.now() };
+
+    onAddItems(newItem);
+    setDescription("");
+  }
+
   return (
-    <div className="form">
-      <Button>Add list item</Button>
-      <div className="form-add">
-        <input type="text" placeholder="list item"></input>
-        <Button>Add</Button>
-      </div>
-    </div>
+    <form className="form-add" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        onChange={(e) => setDescription(e.target.value)}
+        value={description}
+      ></input>
+      <Button>Add</Button>
+    </form>
   );
 }
 
-function List() {
+function List({ items }) {
   return (
     <div className="list">
       <div>
         <span>Check list</span>
-        <Button> &#x2B9F;</Button>
+        <Button>&#x2B9F;</Button>
       </div>
 
       <ul>
-        <Item />
+        {items.map(
+          (item, i) => !item.checked && <Item item={item} key={item.id} />
+        )}
       </ul>
     </div>
   );
 }
 
-function CheckedList() {
+function CheckedList({ items }) {
   return (
     <div className="checked-list">
       <div>
@@ -51,22 +83,24 @@ function CheckedList() {
       </div>
 
       <ul>
-        <Item />
+        {items.map(
+          (item, i) => item.checked && <Item item={item} key={item.id} />
+        )}
       </ul>
     </div>
   );
 }
 
-function Item() {
+function Item({ item }) {
   return (
-    <div className="item">
-      <input type="checkbox" />
-      <span>List item</span>
+    <li className="item">
+      <input type="checkbox" value={item.checked} />
+      <span>{item.description}</span>
       <Button>&#x2716;</Button>
-    </div>
+    </li>
   );
 }
 
-function Button({ children }) {
-  return <button>{children}</button>;
+function Button({ children, onClick }) {
+  return <button onClick={onClick}>{children}</button>;
 }
