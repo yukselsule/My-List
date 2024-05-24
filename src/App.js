@@ -2,10 +2,20 @@ import { useState } from "react";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
+  const [showList, setShowList] = useState(true);
+  const [showCheckedList, setShowCheckedList] = useState(false);
   const [items, setItems] = useState([]);
 
   function handleShowForm() {
     setShowForm((show) => !show);
+  }
+
+  function handleShowList() {
+    setShowList((show) => !show);
+  }
+
+  function handleShowCheckedList() {
+    setShowCheckedList((show) => !show);
   }
 
   function handleSetItems(item) {
@@ -45,11 +55,15 @@ export default function App() {
           items={items}
           onToggleItem={handleToggleItem}
           onDeleteItem={handleDeleteItem}
+          showList={showList}
+          onShowList={handleShowList}
         />
         <CheckedList
           items={items}
           onToggleItem={handleToggleItem}
           onDeleteItem={handleDeleteItem}
+          showList={showCheckedList}
+          onShowList={handleShowCheckedList}
         />
       </div>
     </div>
@@ -87,52 +101,61 @@ function FormAddItem({ onAddItems, onCloseForm }) {
   );
 }
 
-function List({ items, onToggleItem, onDeleteItem }) {
+function List({ items, onToggleItem, onDeleteItem, showList, onShowList }) {
   return (
     <div className="list">
       <div>
         <span>Check list</span>
-        <Button>&#x2B9F;</Button>
+        <Button onClick={onShowList}>{showList ? "\u2B9D" : "\u2B9F"}</Button>
       </div>
-
-      <ul>
-        {items.map(
-          (item, i) =>
-            !item.checked && (
-              <Item
-                item={item}
-                key={item.id}
-                onToggleItem={onToggleItem}
-                onDeleteItem={onDeleteItem}
-              />
-            )
-        )}
-      </ul>
+      {showList && (
+        <ul>
+          {items.map(
+            (item, i) =>
+              !item.checked && (
+                <Item
+                  item={item}
+                  key={item.id}
+                  onToggleItem={onToggleItem}
+                  onDeleteItem={onDeleteItem}
+                />
+              )
+          )}
+        </ul>
+      )}
     </div>
   );
 }
 
-function CheckedList({ items, onToggleItem, onDeleteItem }) {
+function CheckedList({
+  items,
+  onToggleItem,
+  onDeleteItem,
+  showList,
+  onShowList,
+}) {
+  const checked = items.filter((item) => item.checked).length;
   return (
     <div className="checked-list">
       <div>
-        <span>X checked items</span>
-        <Button>&#x2B9F;</Button>
+        <span>{checked} checked items</span>
+        <Button onClick={onShowList}>{showList ? "\u2B9D" : "\u2B9F"}</Button>
       </div>
-
-      <ul>
-        {items.map(
-          (item, i) =>
-            item.checked && (
-              <Item
-                item={item}
-                key={item.id}
-                onToggleItem={onToggleItem}
-                onDeleteItem={onDeleteItem}
-              />
-            )
-        )}
-      </ul>
+      {showList && (
+        <ul>
+          {items.map(
+            (item, i) =>
+              item.checked && (
+                <Item
+                  item={item}
+                  key={item.id}
+                  onToggleItem={onToggleItem}
+                  onDeleteItem={onDeleteItem}
+                />
+              )
+          )}
+        </ul>
+      )}
     </div>
   );
 }
