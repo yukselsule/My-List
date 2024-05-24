@@ -21,7 +21,12 @@ export default function App() {
           <Button onClick={handleShowForm}>
             {showForm ? "Close" : "Add list item"}
           </Button>
-          {showForm && <FormAddItem onAddItems={handleSetItems} />}
+          {showForm && (
+            <FormAddItem
+              onAddItems={handleSetItems}
+              onCloseForm={handleShowForm}
+            />
+          )}
         </div>
         <List items={items} />
         <CheckedList items={items} />
@@ -34,15 +39,19 @@ function Header() {
   return <h1>My List</h1>;
 }
 
-function FormAddItem({ onAddItems }) {
+function FormAddItem({ onAddItems, onCloseForm }) {
   const [description, setDescription] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    if (!description) return;
+
     const newItem = { description, checked: false, id: Date.now() };
 
     onAddItems(newItem);
     setDescription("");
+    onCloseForm();
   }
 
   return (
