@@ -92,3 +92,8 @@ input[type="checkbox"] {
   gap: 2rem;
   align-items: center;
 }
+
+.checked {
+  text-decoration: line-through;
+  color: #4c4c4c;
+}

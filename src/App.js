@@ -9,8 +9,15 @@ export default function App() {
   }
 
   function handleSetItems(item) {
-    console.log(items);
     setItems((items) => [...items, item]);
+  }
+
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      )
+    );
   }
 
   return (
@@ -28,8 +35,8 @@ export default function App() {
             />
           )}
         </div>
-        <List items={items} />
-        <CheckedList items={items} />
+        <List items={items} onToggleItem={handleToggleItem} />
+        <CheckedList items={items} onToggleItem={handleToggleItem} />
       </div>
     </div>
   );
@@ -66,7 +73,7 @@ function FormAddItem({ onAddItems, onCloseForm }) {
   );
 }
 
-function List({ items }) {
+function List({ items, onToggleItem }) {
   return (
     <div className="list">
       <div>
@@ -76,14 +83,17 @@ function List({ items }) {
 
       <ul>
         {items.map(
-          (item, i) => !item.checked && <Item item={item} key={item.id} />
+          (item, i) =>
+            !item.checked && (
+              <Item item={item} key={item.id} onToggleItem={onToggleItem} />
+            )
         )}
       </ul>
     </div>
   );
 }
 
-function CheckedList({ items }) {
+function CheckedList({ items, onToggleItem }) {
   return (
     <div className="checked-list">
       <div>
@@ -93,18 +103,25 @@ function CheckedList({ items }) {
 
       <ul>
         {items.map(
-          (item, i) => item.checked && <Item item={item} key={item.id} />
+          (item, i) =>
+            item.checked && (
+              <Item item={item} key={item.id} onToggleItem={onToggleItem} />
+            )
         )}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, onToggleItem }) {
   return (
     <li className="item">
-      <input type="checkbox" value={item.checked} />
-      <span>{item.description}</span>
+      <input
+        type="checkbox"
+        checked={item.checked}
+        onChange={() => onToggleItem(item.id)}
+      />
+      <span className={item.checked ? "checked" : ""}>{item.description}</span>
       <Button>&#x2716;</Button>
     </li>
   );
