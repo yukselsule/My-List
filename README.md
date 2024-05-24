@@ -12,8 +12,8 @@ My List Application is a simple React-based application for managing and trackin
 
 ## Technologies Used
 
-- **React**: Front-end library for building the user interface.
-- **CSS**: Styling the application with modern CSS techniques.
-- **JavaScript**: Programming language used for logic and interactivity.
+- **React**
+- **CSS**
+- **JavaScript**
 
 You can visit the website <a href="https://mylist-checklist.netlify.app/" >here</a>
