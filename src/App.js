@@ -32,7 +32,6 @@ export default function App() {
 
   function handleDeleteItem(id) {
     const confirmed = window.confirm("Do you want to delete this item?");
-
     if (confirmed) setItems((items) => items.filter((item) => item.id !== id));
   }
 
@@ -79,11 +78,9 @@ function FormAddItem({ onAddItems, onCloseForm }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    if (!description) return;
+    if (description.trim().length === 0) return;
 
     const newItem = { description, checked: false, id: Date.now() };
-
     onAddItems(newItem);
     setDescription("");
     onCloseForm();
@@ -95,8 +92,8 @@ function FormAddItem({ onAddItems, onCloseForm }) {
         type="text"
         onChange={(e) => setDescription(e.target.value)}
         value={description}
-      ></input>
-      <Button>Add</Button>
+      />
+      <Button type="submit">Add</Button>
     </form>
   );
 }
@@ -111,7 +108,7 @@ function List({ items, onToggleItem, onDeleteItem, showList, onShowList }) {
       {showList && (
         <ul>
           {items.map(
-            (item, i) =>
+            (item) =>
               !item.checked && (
                 <Item
                   item={item}
@@ -144,7 +141,7 @@ function CheckedList({
       {showList && (
         <ul>
           {items.map(
-            (item, i) =>
+            (item) =>
               item.checked && (
                 <Item
                   item={item}
