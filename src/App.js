@@ -20,6 +20,12 @@ export default function App() {
     );
   }
 
+  function handleDeleteItem(id) {
+    const confirmed = window.confirm("Do you want to delete this item?");
+
+    if (confirmed) setItems((items) => items.filter((item) => item.id !== id));
+  }
+
   return (
     <div>
       <Header />
@@ -35,8 +41,16 @@ export default function App() {
             />
           )}
         </div>
-        <List items={items} onToggleItem={handleToggleItem} />
-        <CheckedList items={items} onToggleItem={handleToggleItem} />
+        <List
+          items={items}
+          onToggleItem={handleToggleItem}
+          onDeleteItem={handleDeleteItem}
+        />
+        <CheckedList
+          items={items}
+          onToggleItem={handleToggleItem}
+          onDeleteItem={handleDeleteItem}
+        />
       </div>
     </div>
   );
@@ -73,7 +87,7 @@ function FormAddItem({ onAddItems, onCloseForm }) {
   );
 }
 
-function List({ items, onToggleItem }) {
+function List({ items, onToggleItem, onDeleteItem }) {
   return (
     <div className="list">
       <div>
@@ -85,7 +99,12 @@ function List({ items, onToggleItem }) {
         {items.map(
           (item, i) =>
             !item.checked && (
-              <Item item={item} key={item.id} onToggleItem={onToggleItem} />
+              <Item
+                item={item}
+                key={item.id}
+                onToggleItem={onToggleItem}
+                onDeleteItem={onDeleteItem}
+              />
             )
         )}
       </ul>
@@ -93,7 +112,7 @@ function List({ items, onToggleItem }) {
   );
 }
 
-function CheckedList({ items, onToggleItem }) {
+function CheckedList({ items, onToggleItem, onDeleteItem }) {
   return (
     <div className="checked-list">
       <div>
@@ -105,7 +124,12 @@ function CheckedList({ items, onToggleItem }) {
         {items.map(
           (item, i) =>
             item.checked && (
-              <Item item={item} key={item.id} onToggleItem={onToggleItem} />
+              <Item
+                item={item}
+                key={item.id}
+                onToggleItem={onToggleItem}
+                onDeleteItem={onDeleteItem}
+              />
             )
         )}
       </ul>
@@ -113,7 +137,7 @@ function CheckedList({ items, onToggleItem }) {
   );
 }
 
-function Item({ item, onToggleItem }) {
+function Item({ item, onToggleItem, onDeleteItem }) {
   return (
     <li className="item">
       <input
@@ -122,7 +146,7 @@ function Item({ item, onToggleItem }) {
         onChange={() => onToggleItem(item.id)}
       />
       <span className={item.checked ? "checked" : ""}>{item.description}</span>
-      <Button>&#x2716;</Button>
+      <Button onClick={() => onDeleteItem(item.id)}>&#x2716;</Button>
     </li>
   );
 }
