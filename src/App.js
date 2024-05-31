@@ -4,12 +4,15 @@ import { FormAddItem } from "./components/FormAddItem";
 import { List } from "./components/List";
 import { CheckedList } from "./components/CheckedList";
 import { Button } from "./components/Button";
+import useLocalStorageState from "./components/useLocalStorageState";
 
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [showList, setShowList] = useState(true);
   const [showCheckedList, setShowCheckedList] = useState(false);
-  const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
+
+  const [items, setItems] = useLocalStorageState([], "items");
 
   function handleShowForm() {
     setShowForm((show) => !show);
