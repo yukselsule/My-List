@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "./Button";
 
 export function FormAddItem({ onAddItems, onCloseForm }) {
   const [description, setDescription] = useState("");
+  const inputEl = useRef(null);
+
+  useEffect(function () {
+    inputEl.current.focus();
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -20,6 +25,7 @@ export function FormAddItem({ onAddItems, onCloseForm }) {
         type="text"
         onChange={(e) => setDescription(e.target.value)}
         value={description}
+        ref={inputEl}
       />
       <Button type="submit">Add</Button>
     </form>
